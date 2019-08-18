@@ -6,10 +6,20 @@ Simple tool in go to generate text file from database query
   * Connection
     * string
     * SQL Server (only database for now) connection string
-  * BuildSql
+  * Build SQL
     * string
     * 1st query run that will build/load the table with records
-    * optional: if empty 
-  * GetSql
-  * SetSql
-* OutputPath
+    * OPTIONAL
+  * Get SQL
+    * string
+    * 2nd query run that will get the records
+    * REQUIRED
+  * Get Fields
+    * NOT CURRENTLY DESIGNED
+  * Set SQL
+    * string
+    * 3rd query run that marks the records written
+    * OPTIONAL
+  * Set Fields
+    * NOT CURRENTLY DESIGNED
+* Output Path
