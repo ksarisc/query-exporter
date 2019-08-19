@@ -33,4 +33,11 @@ func main() {
 	fmt.Printf("Connect:   %s\nBuild SQL: %s\nGet SQL:   %s\nSet SQL:   %s\n",
 		dbas.Connection, dbas.BuildSQL, dbas.GetSQL, dbas.SetSQL)
 	fmt.Printf("Output Path: %s\n", conf.OutputPath)
+
+	fmt.Println("Beginning Query to File")
+	err = lib.QueryToFile(conf.Database, conf.OutputPath)
+	if err != nil {
+		fmt.Printf("Query to File Error: %s\n", err)
+	}
+	fmt.Println("Complete")
 }
