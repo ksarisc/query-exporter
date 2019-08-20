@@ -28,6 +28,12 @@ func main() {
 	}
 	var conf lib.AppConfig
 	json.Unmarshal(data, &conf)
+
+	if err := lib.ConfigHasRequiredValues(&conf); err != nil {
+		fmt.Printf("Config Error: %s\n", err)
+		return
+	}
+
 	fmt.Print("App Configuration\nDatabase\n")
 	dbas := conf.Database
 	fmt.Printf("Connect:   %s\nBuild SQL: %s\nGet SQL:   %s\nSet SQL:   %s\n",

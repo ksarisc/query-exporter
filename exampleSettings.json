@@ -1,6 +1,7 @@
 {
     "database": {
         "connection":"Server=.;Database=AdventureWorks;Trusted_Connection=True;",
+        "provider": "mssql",
         "buildSql":"",
         "getSql":"SELECT @@version;",
         "setSql":""

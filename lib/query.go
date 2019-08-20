@@ -5,8 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-
-	_ "github.com/denisenkom/go-mssqldb"
+	//_ "github.com/denisenkom/go-mssqldb"
 )
 
 // QueryToFile builds the file defined in the AppConfig
@@ -19,7 +18,7 @@ func QueryToFile(config DataConfig, fileName string) error {
 		return fmt.Errorf("Get SQL configuration value REQUIRED")
 	}
 	// open connection
-	conn, err := sql.Open("mssql", config.Connection)
+	conn, err := sql.Open(config.Provider, config.Connection)
 	if err != nil {
 		return err
 	}
