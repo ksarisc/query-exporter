@@ -1,9 +1,7 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 
 	lib "./lib"
@@ -17,19 +15,8 @@ func main() {
 	}
 	fmt.Printf("Testing: %s\n", aset)
 
-	file, err := os.Open(aset)
+	conf, err := lib.ParseAndCheckConfig(aset)
 	if err != nil {
-		fmt.Printf("File Open Error: %s\n", err)
-	}
-	data, err := ioutil.ReadAll(file)
-	if err != nil {
-		fmt.Printf("Settings Error: %s\n", err)
-		return
-	}
-	var conf lib.AppConfig
-	json.Unmarshal(data, &conf)
-
-	if err := lib.ConfigHasRequiredValues(&conf); err != nil {
 		fmt.Printf("Config Error: %s\n", err)
 		return
 	}
