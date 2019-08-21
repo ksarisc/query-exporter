@@ -4,19 +4,12 @@ package lib
 import (
 	"database/sql"
 	"fmt"
-	"log"
-	//_ "github.com/denisenkom/go-mssqldb"
 )
+
+//"io/ioutil"
 
 // QueryToFile builds the file defined in the AppConfig
 func QueryToFile(config DataConfig, fileName string) error {
-	// validate parameters
-	if StringIsWhitespace(config.Connection) {
-		return fmt.Errorf("SQL Connection configuration value REQUIRED")
-	}
-	if StringIsWhitespace(config.GetSQL) {
-		return fmt.Errorf("Get SQL configuration value REQUIRED")
-	}
 	// open connection
 	conn, err := sql.Open(config.Provider, config.Connection)
 	if err != nil {
@@ -32,20 +25,22 @@ func QueryToFile(config DataConfig, fileName string) error {
 		//rslt.RowsAffected()
 	}
 	// run get
-	var (
-		sqlversion string
-	)
 	rows, err := conn.Query(config.GetSQL)
 	if err != nil {
 		return err
 	}
-	for rows.Next() {
-		err := rows.Scan(&sqlversion)
+	// columns of get
+	var cols []string
+	if len(config.GetFields) > 0 {
+		cols = config.GetFields
+	} else {
+		cols, err = rows.Columns()
 		if err != nil {
 			return err
 		}
-		log.Println(sqlversion)
 	}
+	// build the file
+	loadFile(rows, cols, fileName)
 	// run set
 	if !StringIsWhitespace(config.SetSQL) {
 		_, err := conn.Exec(config.SetSQL)
@@ -56,3 +51,25 @@ func QueryToFile(config DataConfig, fileName string) error {
 	}
 	return nil
 } // END RunQuery
+
+func loadFile(rows *sql.Rows, cols []string, path string) error {
+	collen := len(cols)
+	scans := make([]interface{}, collen)
+	//var values = [collen]string;
+	// loop through data
+	for rows.Next() {
+		if err := rows.Scan(scans...); err != nil {
+			return err
+		}
+		for i := 0; i < collen; i++ {
+			if i > 0 {
+				fmt.Print(", ")
+			}
+			if bytes, good := scans[i].(*sql.RawBytes); good {
+				fmt.Print(string(*bytes))
+			}
+		}
+		fmt.Println()
+	}
+	return nil
+} // END loadFile

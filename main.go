@@ -5,6 +5,7 @@ import (
 	"os"
 
 	lib "./lib"
+	_ "github.com/denisenkom/go-mssqldb"
 )
 
 func main() {
@@ -33,4 +34,4 @@ func main() {
 		fmt.Printf("Query to File Error: %s\n", err)
 	}
 	fmt.Println("Complete")
-}
+} // END main

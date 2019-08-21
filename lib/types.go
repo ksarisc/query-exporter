@@ -16,12 +16,15 @@ type AppConfig struct {
 
 // DataConfig stores Database section of AppConfig
 type DataConfig struct {
-	Connection string `json:"connection"`
-	Provider   string `json:"provider"`
-	BuildSQL   string `json:"buildSql"`
-	GetSQL     string `json:"getSql"`
-	SetSQL     string `json:"setSql"`
+	Connection string   `json:"connection"`
+	Provider   string   `json:"provider"`
+	BuildSQL   string   `json:"buildSql"`
+	GetSQL     string   `json:"getSql"`
+	GetFields  []string `json:"getFields"` //DataField `json:"getFields"`
+	SetSQL     string   `json:"setSql"`
 }
+
+//type DataField struct { }
 
 // ParseAndCheckConfig read json file into AppConfig struct
 // and return any errors with configuration
