@@ -40,7 +40,9 @@ func QueryToFile(config DataConfig, fileName string) error {
 		}
 	}
 	// build the file
-	loadFile(rows, cols, fileName)
+	if err := loadFile(rows, cols, fileName); err != nil {
+		return err
+	}
 	// run set
 	if !StringIsWhitespace(config.SetSQL) {
 		_, err := conn.Exec(config.SetSQL)
@@ -55,18 +57,21 @@ func QueryToFile(config DataConfig, fileName string) error {
 func loadFile(rows *sql.Rows, cols []string, path string) error {
 	collen := len(cols)
 	scans := make([]interface{}, collen)
-	//var values = [collen]string;
+	rvals := make([][]byte, collen)
+	for i := 0; i < collen; i++ {
+		scans[i] = &rvals[i]
+	}
 	// loop through data
 	for rows.Next() {
 		if err := rows.Scan(scans...); err != nil {
 			return err
 		}
-		for i := 0; i < collen; i++ {
+		for i, bytes := range rvals {
 			if i > 0 {
 				fmt.Print(", ")
 			}
-			if bytes, good := scans[i].(*sql.RawBytes); good {
-				fmt.Print(string(*bytes))
+			if bytes != nil {
+				fmt.Printf("%s", bytes)
 			}
 		}
 		fmt.Println()
