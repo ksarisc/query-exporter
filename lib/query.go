@@ -66,12 +66,16 @@ func loadFile(rows *sql.Rows, cols []string, path string) error {
 		if err := rows.Scan(scans...); err != nil {
 			return err
 		}
-		for i, bytes := range rvals {
+		// copy performed here
+		//for i, bytes := range rvals {
+		for i := 0; i < collen; i++ {
 			if i > 0 {
 				fmt.Print(", ")
 			}
-			if bytes != nil {
-				fmt.Printf("%s", bytes)
+			//if bytes != nil { fmt.Printf("%s", bytes)
+			// lookup vs copy cost?
+			if rvals[i] != nil {
+				fmt.Printf("%s", rvals[i])
 			}
 		}
 		fmt.Println()
