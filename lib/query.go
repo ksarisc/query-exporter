@@ -80,5 +80,5 @@ func loadFile(rows *sql.Rows, cols []string, path string) error {
 		}
 		fmt.Println()
 	}
-	return nil
+	return rows.Err()
 } // END loadFile
