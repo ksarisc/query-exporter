@@ -4,9 +4,26 @@ package lib
 import (
 	"database/sql"
 	"fmt"
+	"net"
 )
 
 //"io/ioutil"
+
+// ServerToAddress for SQL server, translate hostname to ip address
+func ServerToAddress(hostname string) string {
+	if StringIsWhitespace(hostname) || hostname == "." {
+		return "127.0.0.1"
+	}
+	ips, err := net.LookupIP(hostname)
+	if err != nil {
+		//fmt.Fprintf()
+		return "127.0.0.1"
+	}
+	for _, addr := range ips {
+		fmt.Print("## IN A #%s#", hostname, addr.String())
+	}
+	return ips[0].String()
+} // END ServerToAddress
 
 // QueryToFile builds the file defined in the AppConfig
 func QueryToFile(config DataConfig, fileName string) error {
