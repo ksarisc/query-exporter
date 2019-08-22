@@ -1,11 +1,9 @@
 package lib
 
 import (
-	"bufio"
 	"database/sql"
 	"fmt"
 	"net"
-	"os"
 )
 
 //"io/ioutil"
@@ -58,13 +56,12 @@ func QueryToFile(config DataConfig, fileName string) error {
 		}
 	}
 	// build the file
-	file, err := os.Create(fileName)
+	writer, err := NewFileExporter(fileName)
 	if err != nil {
 		return err
 	}
-	defer file.Close()
-	writer := bufio.NewWriter(file)
-	if err := loadFile(rows, cols, writer); err != nil {
+	defer writer.Close()
+	if err := loadFile(rows, &cols, &writer); err != nil {
 		return err
 	}
 	// run set
@@ -78,8 +75,8 @@ func QueryToFile(config DataConfig, fileName string) error {
 	return nil
 } // END RunQuery
 
-func loadFile(rows *sql.Rows, cols []string, writer *bufio.Writer) error {
-	collen := len(cols)
+func loadFile(rows *sql.Rows, cols *[]string, writer *FileExporter) error {
+	collen := len(*cols)
 	scans := make([]interface{}, collen)
 	rvals := make([][]byte, collen)
 	// what about outputting column names
@@ -88,7 +85,7 @@ func loadFile(rows *sql.Rows, cols []string, writer *bufio.Writer) error {
 		if i > 0 {
 			writer.WriteString("|")
 		}
-		writer.WriteString(cols[i])
+		writer.WriteString((*cols)[i])
 		scans[i] = &rvals[i]
 	}
 	writer.WriteString("\n")
@@ -112,8 +109,5 @@ func loadFile(rows *sql.Rows, cols []string, writer *bufio.Writer) error {
 		}
 		writer.WriteString("\n")
 	}
-	if err := rows.Err(); err != nil {
-		return err
-	}
-	return writer.Flush()
+	return rows.Err()
 } // END loadFile

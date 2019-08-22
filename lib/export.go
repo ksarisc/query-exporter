@@ -36,7 +36,7 @@ func (fe *FileExporter) Write(p []byte) (int, error) {
 } // END Write
 
 // Close exposes FileExporter as Writer
-func (fe *FileExporter) Close(p []byte) error {
+func (fe *FileExporter) Close() error {
 	err := fe.Writer.Flush()
 	fe.File.Close()
 	// what about the potential close error?
