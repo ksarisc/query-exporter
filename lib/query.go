@@ -1,6 +1,5 @@
 package lib
 
-//https://github.com/denisenkom/go-mssqldb
 import (
 	"database/sql"
 	"fmt"
