@@ -5,6 +5,8 @@
 *.so
 *.dylib
 main
+queryexporter
+query-exporter
 
 # Test binary, build with `go test -c`
 *.test

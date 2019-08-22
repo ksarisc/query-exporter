@@ -21,13 +21,15 @@ Simple tool in go to generate text file from database query
     * 2nd query run that will get the records
     * REQUIRED
   * Get Fields
-    * NOT CURRENTLY DESIGNED
+    * string array
+      * field names
+      * currently only names... thinking about switching array of objects
+    * OPTIONAL
+      * if NOT specified, all fields will be returned
   * Set SQL
     * string
     * 3rd query run that marks the records written
     * OPTIONAL
-  * Set Fields
-    * NOT CURRENTLY DESIGNED
 * Output Path
   * string
   * directory/path where file will be generated

@@ -1,9 +1,11 @@
 package lib
 
 import (
+	"bufio"
 	"database/sql"
 	"fmt"
 	"net"
+	"os"
 )
 
 //"io/ioutil"
@@ -56,7 +58,13 @@ func QueryToFile(config DataConfig, fileName string) error {
 		}
 	}
 	// build the file
-	if err := loadFile(rows, cols, fileName); err != nil {
+	file, err := os.Create(fileName)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	writer := bufio.NewWriter(file)
+	if err := loadFile(rows, cols, writer); err != nil {
 		return err
 	}
 	// run set
@@ -70,13 +78,20 @@ func QueryToFile(config DataConfig, fileName string) error {
 	return nil
 } // END RunQuery
 
-func loadFile(rows *sql.Rows, cols []string, path string) error {
+func loadFile(rows *sql.Rows, cols []string, writer *bufio.Writer) error {
 	collen := len(cols)
 	scans := make([]interface{}, collen)
 	rvals := make([][]byte, collen)
+	// what about outputting column names
 	for i := 0; i < collen; i++ {
+		//count, err := w.WriteString("some data\n")
+		if i > 0 {
+			writer.WriteString("|")
+		}
+		writer.WriteString(cols[i])
 		scans[i] = &rvals[i]
 	}
+	writer.WriteString("\n")
 	// loop through data
 	for rows.Next() {
 		if err := rows.Scan(scans...); err != nil {
@@ -86,15 +101,19 @@ func loadFile(rows *sql.Rows, cols []string, path string) error {
 		//for i, bytes := range rvals {
 		for i := 0; i < collen; i++ {
 			if i > 0 {
-				fmt.Print(", ")
+				writer.WriteString("|")
 			}
 			//if bytes != nil { fmt.Printf("%s", bytes)
 			// lookup vs copy cost?
 			if rvals[i] != nil {
-				fmt.Printf("%s", rvals[i])
+				//fmt.Fprintf(writer, "%s", rvals[i])
+				writer.Write(rvals[i])
 			}
 		}
-		fmt.Println()
+		writer.WriteString("\n")
 	}
-	return rows.Err()
+	if err := rows.Err(); err != nil {
+		return err
+	}
+	return writer.Flush()
 } // END loadFile
