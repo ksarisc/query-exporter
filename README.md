@@ -29,3 +29,5 @@ Simple tool in go to generate text file from database query
   * Set Fields
     * NOT CURRENTLY DESIGNED
 * Output Path
+  * string
+  * directory/path where file will be generated
