@@ -70,16 +70,33 @@ func ConfigHasRequiredValues(config *AppConfig) error {
 		return fmt.Errorf("Get SQL configuration value REQUIRED")
 	}
 	// load files for SQL statements as needed
+	if isSQLFile(config.Database.BuildSQL) {
+	}
+	if isSQLFile(config.Database.GetSQL) {
+	}
+	if isSQLFile(config.Database.SetSQL) {
+	}
 	return nil
 } // END ConfigHasRequiredValues
 
-func isSqlFile(value string) bool {
+func isSQLFile(value string) bool {
 	vlen := len(value) - 1
+	if vlen < 5 {
+		return false
+	}
 	for i := vlen; i >= 0; i-- {
 		if value[i] == '.' {
 			// check file end
+			if (i + 4) < vlen {
+				v1 := value[i+1]
+				v2 := value[i+2]
+				v3 := value[i+3]
+				return (v1 == 's' || v1 == 'S') &&
+					(v2 == 'q' || v2 == 'Q') &&
+					(v3 == 'l' || v3 == 'L')
+			}
 			return false
 		}
 	}
 	return false
-} // END isSqlFile
+} // END isSQLFile
