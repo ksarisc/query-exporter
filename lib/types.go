@@ -69,5 +69,17 @@ func ConfigHasRequiredValues(config *AppConfig) error {
 	if StringIsWhitespace(config.Database.GetSQL) {
 		return fmt.Errorf("Get SQL configuration value REQUIRED")
 	}
+	// load files for SQL statements as needed
 	return nil
 } // END ConfigHasRequiredValues
+
+func isSqlFile(value string) bool {
+	vlen := len(value) - 1
+	for i := vlen; i >= 0; i-- {
+		if value[i] == '.' {
+			// check file end
+			return false
+		}
+	}
+	return false
+} // END isSqlFile
