@@ -10,8 +10,9 @@ This is a simple tool written in go to generate pipe separated text file from da
     * string
     * mssql (currently)
       * whatever refers to library MUST import appropriate driver
-      * using https://github.com/denisenkom/go-mssqldb
-      * install via "go get github.com/denisenkom/go-mssqldb"
+        * currently using https://github.com/denisenkom/go-mssqldb
+        * install via "go get github.com/denisenkom/go-mssqldb"
+        * change this in main.go for other library
   * Build SQL
     * string
     * 1st query run that will build/load the table with records
@@ -36,6 +37,10 @@ This is a simple tool written in go to generate pipe separated text file from da
 
 ### Notes
 * Placing a file name and path with the .sql extension in Build, Get, or Set SQL strings will cause the configuration to attempt to retrieve the text from the file as the SQL statement.
+
+### ODDITIES
+* **TCP/IP MUST be enabled in the SQL Server Configuration Manager for the go-mssqldb driver**
+* ~~The connection string must include the IP Address (as the hostname will NOT be properly resolved)~~
 
 # License
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
