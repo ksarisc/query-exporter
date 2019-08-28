@@ -1,5 +1,5 @@
-# query-exporter
-Simple tool in go to generate text file from database query
+# Query Exporter
+This is a simple tool written in go to generate pipe separated text file from database query(ies).
 
 ### Configuration Sections
 * Database
