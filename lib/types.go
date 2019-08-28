@@ -29,12 +29,7 @@ type DataConfig struct {
 // ParseAndCheckConfig read json file into AppConfig struct
 // and return any errors with configuration
 func ParseAndCheckConfig(fileName string) (AppConfig, error) {
-	file, err := os.Open(fileName)
-	if err != nil {
-		//fmt.Printf("File Open Error: %s\n", err)
-		return AppConfig{}, err
-	}
-	data, err := ioutil.ReadAll(file)
+	data, err := readFile(fileName)
 	if err != nil {
 		fmt.Printf("Settings Error: %s\n", err)
 		return AppConfig{}, err
@@ -71,10 +66,25 @@ func ConfigHasRequiredValues(config *AppConfig) error {
 	}
 	// load files for SQL statements as needed
 	if isSQLFile(config.Database.BuildSQL) {
+		data, err := readFile(config.Database.BuildSQL)
+		if err != nil {
+			return err
+		}
+		config.Database.BuildSQL = string(data)
 	}
 	if isSQLFile(config.Database.GetSQL) {
+		data, err := readFile(config.Database.GetSQL)
+		if err != nil {
+			return err
+		}
+		config.Database.GetSQL = string(data)
 	}
 	if isSQLFile(config.Database.SetSQL) {
+		data, err := readFile(config.Database.SetSQL)
+		if err != nil {
+			return err
+		}
+		config.Database.SetSQL = string(data)
 	}
 	return nil
 } // END ConfigHasRequiredValues
@@ -100,3 +110,16 @@ func isSQLFile(value string) bool {
 	}
 	return false
 } // END isSQLFile
+
+func readFile(fileName string) ([]byte, error) {
+	file, err := os.Open(fileName)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+	data, err := ioutil.ReadAll(file)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+} // END readFile

@@ -19,7 +19,7 @@ func ServerToAddress(hostname string) string {
 		return "127.0.0.1"
 	}
 	for _, addr := range ips {
-		fmt.Print("## IN A #%s#", hostname, addr.String())
+		fmt.Printf("#%s# IN A #%s#\n", hostname, addr.String())
 	}
 	return ips[0].String()
 } // END ServerToAddress

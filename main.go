@@ -32,6 +32,8 @@ func main() {
 	err = lib.QueryToFile(conf.Database, conf.OutputPath)
 	if err != nil {
 		fmt.Printf("Query to File Error: %s\n", err)
+	} else {
+		//fmt.Printf("File Written: %s\n", conf.OutputPath)
+		fmt.Println("Complete")
 	}
-	fmt.Println("Complete")
 } // END main
