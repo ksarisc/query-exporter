@@ -8,6 +8,8 @@ func StringIsWhitespace(value string) bool {
 	if value == "" {
 		return true
 	}
+	// cannot loop for i := range value due
+	// to value[i] being byte rather than rune
 	for _, v := range value {
 		if !unicode.IsSpace(v) {
 			return false
